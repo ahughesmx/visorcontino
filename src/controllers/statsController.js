@@ -68,19 +68,20 @@ const getTrends = async (req, res) => {
             params.push(agentName);
         }
 
+        // Definitive fix for the "Double Shift" timezone bug
         const query = `
+            WITH series AS (
+                SELECT (timezone('America/Mexico_City', now())::date - i) as d
+                FROM generate_series(0, 6) i
+            )
             SELECT 
-                to_char(d AT TIME ZONE 'America/Mexico_City', 'YYYY-MM-DD') as date, 
+                to_char(s.d, 'YYYY-MM-DD') as date, 
                 COUNT(sc.id_registro) as count 
-            FROM generate_series(
-                (CURRENT_DATE AT TIME ZONE 'America/Mexico_City' - INTERVAL '6 days')::date, 
-                (CURRENT_DATE AT TIME ZONE 'America/Mexico_City')::date, 
-                '1 day'::interval
-            ) d 
-            LEFT JOIN solicitudes_contino sc ON DATE(sc.creado_en AT TIME ZONE 'America/Mexico_City') = DATE(d AT TIME ZONE 'America/Mexico_City') 
+            FROM series s
+            LEFT JOIN solicitudes_contino sc ON (sc.creado_en AT TIME ZONE 'America/Mexico_City')::date = s.d
             ${!isAdmin ? 'AND sc.agente_asignado = $1' : ''}
-            GROUP BY d
-            ORDER BY d
+            GROUP BY s.d
+            ORDER BY s.d ASC
         `;
 
         const result = await pool.query(query, params);

@@ -1,0 +1,112 @@
+[
+  {
+    "column_name": "id_registro",
+    "data_type": "integer",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "tipo_solicitud",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "numero_serie",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "lectura_equipo",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "razon_social",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "nombre_contacto",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "telefono",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "correo",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "direccion",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "detalle_falla",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "horario_disponible",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "ciudad",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "necesidad",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "whatsapp_origen",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "creado_en",
+    "data_type": "timestamp without time zone",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "resumen",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "turnado",
+    "data_type": "boolean",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "timestamp_turnado",
+    "data_type": "timestamp without time zone",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "info_img",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "info_img2",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "info_img3",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "lead_origen",
+    "data_type": "text",
+    "is_nullable": "YES"
+  }
+]

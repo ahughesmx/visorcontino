@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Visor Contino | Gestión de Solicitudes</title>
+    <link rel="stylesheet" href="style.css?v=1.2">
+    <link rel="stylesheet" href="modal-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <sidebar>
+            <div class="logo">
+                <i data-lucide="activity"></i>
+                VISOR CONTINO
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item active" id="nav-dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    Dashboard
+                </li>
+                <li class="nav-item" id="nav-analytics">
+                    <i data-lucide="bar-chart-3"></i>
+                    Analítica
+                </li>
+                <li class="nav-item" id="nav-settings">
+                    <i data-lucide="settings"></i>
+                    Configuración
+                </li>
+                <li class="nav-item logout-item" id="nav-logout">
+                    <i data-lucide="log-out"></i>
+                    Cerrar Sesión
+                </li>
+            </ul>
+            <div class="user-profile">
+                <div class="user-avatar" id="user-avatar-initials">AD</div>
+                <div class="user-info">
+                    <p class="user-name" id="user-display-name">Admin User</p>
+                    <p class="user-role" id="user-display-role">Administrador</p>
+                </div>
+            </div>
+        </sidebar>
+
+        <main>
+            <div class="header">
+                <div>
+                    <h1>Panel de Control</h1>
+                    <p style="color: var(--text-muted)">Bienvenido de nuevo, aquí está un resumen de hoy.</p>
+                </div>
+            </div>
+
+            <div class="stats-grid" id="stats-container">
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-total">-</span>
+                    <span class="stat-label">Total Solicitudes</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-pending">-</span>
+                    <span class="stat-label">Pendientes</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-rate">-</span>
+                    <span class="stat-label">Tasa de Respuesta</span>
+                </div>
+            </div>
+
+            <div id="settings-section" style="display:none;" class="animate-in">
+                <div class="stat-card" style="width:100%; min-height: 500px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                        <h2 style="margin: 0;">Configuración del Sistema</h2>
+                        <div class="settings-tabs">
+                            <button class="tab-btn active" data-tab="general">General</button>
+                            <button class="tab-btn" data-tab="users" id="tab-users-btn">Usuarios</button>
+                        </div>
+                    </div>
+
+                    <!-- General Tab -->
+                    <!-- General Tab -->
+                    <div class="tab-content active" id="tab-general">
+                        <div class="detail-grid" style="grid-template-columns: 1fr;">
+                            <div class="detail-item">
+                                <label>Intervalo de Actualización (segundos)</label>
+                                <input type="number" id="settings-refresh" class="search-input" value="60" min="5"
+                                    style="width: 100px;">
+                            </div>
+                        </div>
+                        <div style="margin-top: 2rem; text-align: right;">
+                            <button id="save-settings-btn" class="nav-item"
+                                style="border:none; background: var(--primary); color: white; display: inline-flex;">
+                                <i data-lucide="save"></i> Guardar Preferencias
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Users Tab -->
+                    <div class="tab-content" id="tab-users">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <p style="color: var(--text-muted);">Administra los usuarios con acceso al sistema.</p>
+                            <button id="btn-add-user" class="nav-item" onclick="openUserModal()"
+                                style="border:none; background: var(--primary); color: white; display: inline-flex; font-size: 0.9rem;">
+                                <i data-lucide="user-plus"></i> Nuevo Usuario
+                            </button>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="data-table" id="users-table" style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="text-align: left; background: rgba(255,255,255,0.05);">
+                                        <th style="padding: 1rem; border-bottom: 1px solid var(--border);">Usuario</th>
+                                        <th style="padding: 1rem; border-bottom: 1px solid var(--border);">Nombre
+                                            Completo</th>
+                                        <th style="padding: 1rem; border-bottom: 1px solid var(--border);">Rol</th>
+                                        <th style="padding: 1rem; border-bottom: 1px solid var(--border);">Teléfono</th>
+                                        <th style="padding: 1rem; border-bottom: 1px solid var(--border);">Estado</th>
+                                        <th
+                                            style="padding: 1rem; border-bottom: 1px solid var(--border); text-align: right;">
+                                            Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-body">
+                                    <!-- Users injected here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analytics-grid" style="display:none; gap: 1.5rem; flex-direction: column;" class="animate-in">
+
+                <!-- Row 1: Trends (Existing) -->
+                <div class="stat-card" style="width:100%">
+                    <h3>Tendencia de Solicitudes (Últimos 7 días)</h3>
+                    <div id="chart-container"
+                        style="height: 200px; display: flex; gap: 1rem; margin-top: 1rem; padding-bottom: 2rem;"></div>
+                </div>
+
+                <!-- Row 2: Agents & Status -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="stat-card">
+                        <h3>Carga de Trabajo por Agente</h3>
+                        <div id="chart-agents"
+                            style="height: 250px; display: flex; flex-direction: column; justify-content: center; gap: 1rem; margin-top: 1rem;">
+                            <p class="text-sm text-gray">Cargando...</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Estado del Embudo</h3>
+                        <div id="chart-status"
+                            style="height: 250px; display: flex; flex-direction: column; justify-content: center; gap: 1rem; margin-top: 1rem;">
+                            <p class="text-sm text-gray">Cargando...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Types -->
+                <div class="stat-card" style="width:100%">
+                    <h3>Distribución por Tipo de Solicitud</h3>
+                    <div id="chart-types"
+                        style="height: 200px; display: flex; align-items: center; justify-content: space-around; gap: 2rem; margin-top: 1rem;">
+                        <p class="text-sm text-gray">Cargando...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filters-bar">
+                <input type="text" id="search-input" class="search-input"
+                    placeholder="Buscar por nombre, empresa o correo...">
+                <select id="type-filter" class="filter-select">
+                    <option value="">Todos los tipos</option>
+                    <option value="Compra">🛒 Compra</option>
+                    <option value="Renta">🏠 Renta</option>
+                    <option value="tóner">📦 Consumible por contrato</option>
+                    <option value="soporte">🛠️ Soporte técnico</option>
+                </select>
+                <button class="nav-item" id="refresh-btn" style="border:none; padding: 0.6rem 1rem;">
+                    <i data-lucide="refresh-cw"></i> Actualizar
+                </button>
+            </div>
+
+            <div class="leads-container">
+                <table id="leads-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="id_registro">
+                                IDENTIFICADOR <i data-lucide="arrow-up-down" class="sort-icon"></i>
+                            </th>
+                            <th class="sortable" data-sort="status">
+                                ESTADO <i data-lucide="arrow-up-down" class="sort-icon"></i>
+                            </th>
+                            <th class="sortable" data-sort="nombre_contacto">
+                                CLIENTE <i data-lucide="arrow-up-down" class="sort-icon"></i>
+                            </th>
+                            <th class="sortable" data-sort="razon_social">
+                                EMPRESA <i data-lucide="arrow-up-down" class="sort-icon"></i>
+                            </th>
+                            <th class="sortable" data-sort="creado_en">
+                                FECHA <i data-lucide="arrow-up-down" class="sort-icon"></i>
+                            </th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leads-body">
+                        <!-- Leads will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="pagination-footer" class="pagination-footer animate-in">
+                <div class="pagination-left">
+                    <p id="pagination-info">Mostrando 0 de 0 registros</p>
+                </div>
+
+                <div class="pagination-center" id="page-numbers">
+                    <!-- Page numbers will be injected here -->
+                </div>
+
+                <div class="pagination-right">
+                    <select id="limit-filter" class="filter-select" style="margin-right: 0.5rem;">
+                        <option value="10">10 / pág</option>
+                        <option value="20" selected>20 / pág</option>
+                        <option value="30">30 / pág</option>
+                        <option value="50">50 / pág</option>
+                    </select>
+                    <button id="prev-page" class="nav-btn" disabled>
+                        <i data-lucide="chevron-left"></i>
+                    </button>
+                    <button id="next-page" class="nav-btn">
+                        <i data-lucide="chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content animate-in">
+            <button class="close-btn" id="close-modal">&times;</button>
+            <div id="modal-body">
+                <!-- Data will be injected here -->
+            </div>
+        </div>
+    </div> <!-- CLOSED DETAIL MODAL OVERLAY -->
+    <!-- User Modal -->
+    <div id="user-modal-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content animate-in" style="max-width: 400px;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
+                <h3 id="user-modal-title">Nuevo Usuario</h3>
+                <button class="close-btn" id="close-user-modal">&times;</button>
+            </div>
+            <form id="user-form">
+                <input type="hidden" id="user-id">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Usuario</label>
+                    <input type="text" id="user-username" class="settings-input" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Nombre
+                        Completo</label>
+                    <input type="text" id="user-fullname" class="settings-input" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Teléfono</label>
+                    <input type="text" id="user-phone" class="settings-input">
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Rol</label>
+                    <select id="user-role" class="settings-input" style="width: 100%;">
+                        <option value="agent">Agente</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Estado</label>
+                    <select id="user-status" class="settings-input" style="width: 100%;">
+                        <option value="active">Activo</option>
+                        <option value="inactive">Inactivo</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Contraseña</label>
+                    <input type="password" id="user-password" class="settings-input"
+                        placeholder="Dejar en blanco para no cambiar">
+                    <small style="color: var(--text-muted); font-size: 0.8rem;" id="password-hint">Requerido para
+                        nuevos usuarios</small>
+                </div>
+                <div style="text-align: right; margin-top: 1rem;">
+                    <button type="submit" class="action-btn">Guardar Usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Password Change Modal -->
+    <div id="password-modal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; align-items:center; justify-content:center;">
+        <div
+            style="background:#1e293b; border-radius:1rem; padding:2rem; max-width:400px; width:90%; position:relative;">
+            <button id="close-password-modal"
+                style="position:absolute; top:1rem; right:1rem; background:transparent; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer;">&times;</button>
+
+            <h3 style="margin:0 0 1.5rem 0; color:white;">Cambiar Contraseña</h3>
+
+            <form id="password-form" style="display:flex; flex-direction:column; gap:1rem;">
+                <input type="hidden" id="password-user-id">
+                <input type="hidden" id="password-username">
+
+                <p style="color:#94a3b8; margin:0 0 1rem 0;">Usuario: <strong style="color:white;"
+                        id="password-display-username"></strong></p>
+
+                <div>
+                    <label style="display:block; margin-bottom:0.5rem; color:#94a3b8; font-size:0.9rem;">Nueva
+                        Contraseña *</label>
+                    <input type="password" id="new-password" required minlength="8"
+                        style="width:100%; padding:0.75rem; background:#0f172a; border:1px solid #334155; border-radius:0.5rem; color:white; font-family:inherit;">
+                    <small style="color:#64748b; font-size:0.8rem;">Mínimo 8 caracteres</small>
+                </div>
+
+                <div>
+                    <label style="display:block; margin-bottom:0.5rem; color:#94a3b8; font-size:0.9rem;">Confirmar
+                        Contraseña *</label>
+                    <input type="password" id="confirm-password" required minlength="8"
+                        style="width:100%; padding:0.75rem; background:#0f172a; border:1px solid #334155; border-radius:0.5rem; color:white; font-family:inherit;">
+                </div>
+
+                <button type="submit"
+                    style="margin-top:1rem; padding:0.75rem 1.5rem; background:#3b82f6; color:white; border:none; border-radius:0.5rem; font-weight:600; cursor:pointer;">
+                    Cambiar Contraseña
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app-v2.js"></script>
+
+</body>
+
+</html>

@@ -534,6 +534,13 @@ async function fetchAnalytics() {
     try {
         const res = await fetch(`${API_BASE}/analytics/trends`);
         const data = await res.json();
+
+        if (!res.ok) {
+            console.error('Analytics API Error:', data);
+            alert(`Error de analítica: ${data.details || data.error}`);
+            return;
+        }
+
         renderChart(data);
     } catch (err) {
         console.error('Error fetching analytics:', err);

@@ -62,12 +62,9 @@ const getTrends = async (req, res) => {
     try {
         const isAdmin = req.session.role === 'admin';
         const agentName = req.session.username;
-
-        let joinCondition = 'ON DATE(sc.creado_en) = DATE(d)';
         const params = [];
 
         if (!isAdmin) {
-            joinCondition += ' AND sc.agente_asignado = $1';
             params.push(agentName);
         }
 
@@ -80,7 +77,8 @@ const getTrends = async (req, res) => {
                 (CURRENT_DATE AT TIME ZONE 'America/Mexico_City')::date, 
                 '1 day'::interval
             ) d 
-            LEFT JOIN solicitudes_contino sc ON DATE(sc.creado_en AT TIME ZONE 'America/Mexico_City') = DATE(d AT TIME ZONE 'America/Mexico_City') ${joinCondition ? 'AND sc.agente_asignado = $1' : ''}
+            LEFT JOIN solicitudes_contino sc ON DATE(sc.creado_en AT TIME ZONE 'America/Mexico_City') = DATE(d AT TIME ZONE 'America/Mexico_City') 
+            ${!isAdmin ? 'AND sc.agente_asignado = $1' : ''}
             GROUP BY d
             ORDER BY d
         `;

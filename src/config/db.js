@@ -1,11 +1,10 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const isInternal = (process.env.DATABASE_URL || '').includes('railway.internal') ||
-    'postgresql://postgres:uZpgknjUTNogoJlyRcJDkRaDMhYMvLbZ@postgres-pebq.railway.internal:5432/railway'.includes('railway.internal');
+const isInternal = (process.env.DATABASE_URL || '').includes('railway.internal');
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:uZpgknjUTNogoJlyRcJDkRaDMhYMvLbZ@postgres-pebq.railway.internal:5432/railway',
+    connectionString: process.env.DATABASE_URL,
     ssl: isInternal ? false : {
         rejectUnauthorized: false
     }

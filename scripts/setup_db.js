@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const pool = new Pool({
-    connectionString: 'postgresql://postgres:uZpgknjUTNogoJlyRcJDkRaDMhYMvLbZ@junction.proxy.rlwy.net:41678/railway',
+    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:uZpgknjUTNogoJlyRcJDkRaDMhYMvLbZ@postgres-pebq.railway.internal:5432/railway',
     ssl: { rejectUnauthorized: false }
 });
 

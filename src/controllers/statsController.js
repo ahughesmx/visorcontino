@@ -53,8 +53,8 @@ const getStats = async (req, res) => {
             responseRate
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Error in getStats:', err);
+        res.status(500).json({ error: 'Internal server error', details: err.message });
     }
 };
 
@@ -88,8 +88,8 @@ const getTrends = async (req, res) => {
         const result = await pool.query(query, params);
         res.json(result.rows);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Error in getTrends:', err);
+        res.status(500).json({ error: 'Internal server error', details: err.message });
     }
 };
 

@@ -69,8 +69,8 @@ const getLeads = async (req, res) => {
             sortOrder: validSortOrder
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Error in getLeads:', err);
+        res.status(500).json({ error: 'Internal server error', details: err.message });
     }
 };
 
@@ -81,8 +81,8 @@ const getLeadById = async (req, res) => {
         if (result.rows.length === 0) return res.status(404).json({ error: 'Lead not found' });
         res.json(result.rows[0]);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Error in getLeadById:', err);
+        res.status(500).json({ error: 'Internal server error', details: err.message });
     }
 };
 
@@ -137,8 +137,8 @@ const updateLead = async (req, res) => {
 
         res.json(result.rows[0]);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Error in updateLead:', err);
+        res.status(500).json({ error: 'Internal server error', details: err.message });
     }
 };
 
@@ -155,8 +155,8 @@ const getHistory = async (req, res) => {
         );
         res.json(result.rows);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Error in getHistory:', err);
+        res.status(500).json({ error: 'Internal server error', details: err.message });
     }
 };
 

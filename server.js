@@ -135,6 +135,16 @@ app.use('/api/users', userRoutes);
 
 app.use(express.static('public'));
 
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('Global Error Handler:', err);
+    res.status(500).json({
+        error: 'Internal Server Error',
+        details: err.message,
+        path: req.path,
+        stack: process.env.NODE_ENV === 'production' ? undefined : err.stack
+    });
+});
 
 const server = http.createServer(app);
 socketConfig.init(server);

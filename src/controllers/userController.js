@@ -50,7 +50,7 @@ const createUser = async (req, res) => {
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error('Error creating user:', err);
-        res.status(500).json({ error: 'Error creando usuario' });
+        res.status(500).json({ error: 'Error creando usuario', details: err.message });
     }
 };
 
@@ -84,7 +84,7 @@ const updateUser = async (req, res) => {
         res.json(result.rows[0]);
     } catch (err) {
         console.error('Error updating user:', err);
-        res.status(500).json({ error: 'Error actualizando usuario' });
+        res.status(500).json({ error: 'Error actualizando usuario', details: err.message });
     }
 };
 
@@ -110,7 +110,7 @@ const deleteUser = async (req, res) => {
         res.json({ message: 'Usuario desactivado exitosamente' });
     } catch (err) {
         console.error('Error deleting user:', err);
-        res.status(500).json({ error: 'Error eliminando usuario' });
+        res.status(500).json({ error: 'Error eliminando usuario', details: err.message });
     }
 };
 
@@ -151,7 +151,7 @@ const changePassword = async (req, res) => {
         res.json({ message: 'Contraseña actualizada exitosamente' });
     } catch (err) {
         console.error('Error changing password:', err);
-        res.status(500).json({ error: 'Error cambiando contraseña' });
+        res.status(500).json({ error: 'Error cambiando contraseña', details: err.message });
     }
 };
 

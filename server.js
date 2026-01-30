@@ -16,7 +16,13 @@ const userRoutes = require('./src/routes/userRoutes');
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.use(cors());
+// Trust proxy for Railway/HTTPS cookies
+app.set('trust proxy', 1);
+
+app.use(cors({
+    origin: true, // Allow all origins for now, or specify Railway URL
+    credentials: true
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 

@@ -78,7 +78,7 @@ const getTrends = async (req, res) => {
                 to_char(s.d, 'YYYY-MM-DD') as date, 
                 COUNT(sc.id_registro) as count 
             FROM series s
-            LEFT JOIN solicitudes_contino sc ON (sc.creado_en AT TIME ZONE 'America/Mexico_City')::date = s.d
+            LEFT JOIN solicitudes_contino sc ON (sc.creado_en AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')::date = s.d
             ${!isAdmin ? 'AND sc.agente_asignado = $1' : ''}
             GROUP BY s.d
             ORDER BY s.d ASC

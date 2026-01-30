@@ -164,7 +164,7 @@ const getActiveAgents = async (req, res) => {
         res.json(result.rows);
     } catch (err) {
         console.error('Error fetching agents:', err);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        res.status(500).json({ error: 'Error interno del servidor', details: err.message });
     }
 };
 

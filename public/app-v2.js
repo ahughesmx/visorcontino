@@ -551,7 +551,7 @@ function renderChart(data) {
 
     data.forEach(d => {
         const height = (parseInt(d.count) / max) * 100;
-        const day = new Date(d.date).toLocaleDateString('es-MX', { weekday: 'short' });
+        const day = new Date(d.date + 'T00:00:00').toLocaleDateString('es-MX', { weekday: 'short' });
 
         const barWrapper = document.createElement('div');
         barWrapper.style.flex = '1';

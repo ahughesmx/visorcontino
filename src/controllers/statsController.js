@@ -73,14 +73,14 @@ const getTrends = async (req, res) => {
 
         const query = `
             SELECT 
-                to_char(d, 'YYYY-MM-DD') as date, 
+                to_char(d AT TIME ZONE 'America/Mexico_City', 'YYYY-MM-DD') as date, 
                 COUNT(sc.id_registro) as count 
             FROM generate_series(
-                CURRENT_DATE - INTERVAL '6 days', 
-                CURRENT_DATE, 
+                (CURRENT_DATE AT TIME ZONE 'America/Mexico_City' - INTERVAL '6 days')::date, 
+                (CURRENT_DATE AT TIME ZONE 'America/Mexico_City')::date, 
                 '1 day'::interval
             ) d 
-            LEFT JOIN solicitudes_contino sc ${joinCondition}
+            LEFT JOIN solicitudes_contino sc ON DATE(sc.creado_en AT TIME ZONE 'America/Mexico_City') = DATE(d AT TIME ZONE 'America/Mexico_City') ${joinCondition ? 'AND sc.agente_asignado = $1' : ''}
             GROUP BY d
             ORDER BY d
         `;

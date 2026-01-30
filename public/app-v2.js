@@ -243,6 +243,12 @@ async function fetchLeads() {
         const res = await fetch(url);
         const result = await res.json();
 
+        if (!res.ok) {
+            console.error('API Error details:', result);
+            alert(`Error del servidor: ${result.details || result.error}`);
+            return;
+        }
+
         totalRecords = result.total;
         renderLeads(result.data);
         updatePaginationUI();

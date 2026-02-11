@@ -386,6 +386,11 @@ async function openDetailModal(id) {
                     <p style="color: var(--text-muted)">${lead.telefono || ''}</p>
                     <p style="color: var(--text-muted)">${lead.correo || ''}</p>
                 </div>
+                ${lead.lead_origen ? `
+                <div class="detail-item">
+                    <label>Origen del Lead</label>
+                    <p style="font-weight:500">${lead.lead_origen}</p>
+                </div>` : ''}
                 <div class="detail-item">
                     <label>Empresa / Razón Social</label>
                     <p>${lead.razon_social || 'N/A'}</p>

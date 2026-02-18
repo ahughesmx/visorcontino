@@ -236,6 +236,7 @@ function renderOriginChart(data) {
 
     // Process Data: Group items with count > 1, others into "Otros"
     const groupedData = [];
+    const othersList = []; // Store the detailed list of others
     let othersCount = 0;
 
     data.forEach(d => {
@@ -249,11 +250,17 @@ function renderOriginChart(data) {
             groupedData.push({ label: origin, count: count });
         } else {
             othersCount += count;
+            othersList.push(origin);
         }
     });
 
     if (othersCount > 0) {
-        groupedData.push({ label: 'Otros (Unicos)', count: othersCount, isOthers: true });
+        groupedData.push({
+            label: 'Otros (Unicos)',
+            count: othersCount,
+            isOthers: true,
+            othersList: othersList // Attach list for click handler
+        });
     }
 
     // Sort by count desc
@@ -269,12 +276,17 @@ function renderOriginChart(data) {
     container.innerHTML = groupedData.map((d, i) => {
         const width = max > 0 ? (d.count / max) * 100 : 0;
         // Generate a color for repeated items, gray for others
-        // We can use the same colors array or generate random ones
         const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
         const color = d.isOthers ? '#64748b' : colors[i % colors.length];
 
+        // Add click handler only for "Others"
+        const onClickAttr = d.isOthers ? `onclick="openOthersModal(this.dataset.list)"` : '';
+        const cursorStyle = d.isOthers ? 'cursor: pointer; transition: opacity 0.2s;' : '';
+        const dataList = d.isOthers ? `data-list='${JSON.stringify(d.othersList).replace(/'/g, "&#39;")}'` : '';
+        const hoverClass = d.isOthers ? 'class="hover-opacity"' : '';
+
         return `
-        <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem; ${cursorStyle}" ${onClickAttr} ${dataList} ${hoverClass}>
             <div style="width: 150px; text-align:right; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.label}">${d.label}</div>
             <div style="flex:1; background: #1e293b; border-radius:4px; height:24px; position:relative; overflow:hidden;">
                 <div style="width:${width}%; background:${color}; height:100%; border-radius:4px;"></div>
@@ -284,6 +296,40 @@ function renderOriginChart(data) {
         `;
     }).join('');
 }
+
+// Others Modal Logic
+const othersModalOverlay = document.getElementById('others-modal-overlay');
+const closeOthersModalBtn = document.getElementById('close-others-modal');
+const othersListContainer = document.getElementById('others-list');
+
+if (closeOthersModalBtn) {
+    closeOthersModalBtn.onclick = () => othersModalOverlay.style.display = 'none';
+}
+
+// Make openOthersModal available globally for inline onclick
+window.openOthersModal = function (listJson) {
+    try {
+        const list = JSON.parse(listJson);
+        othersListContainer.innerHTML = '';
+
+        if (list.length === 0) {
+            othersListContainer.innerHTML = '<p class="text-sm text-gray">No hay orígenes únicos.</p>';
+        } else {
+            list.forEach(origin => {
+                const item = document.createElement('div');
+                item.style.padding = '0.5rem';
+                item.style.borderBottom = '1px solid var(--border)';
+                item.style.fontSize = '0.9rem';
+                item.textContent = origin;
+                othersListContainer.appendChild(item);
+            });
+        }
+
+        othersModalOverlay.style.display = 'flex';
+    } catch (e) {
+        console.error('Error parsing others list:', e);
+    }
+};
 
 async function fetchLeads() {
     try {

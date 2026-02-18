@@ -35,6 +35,12 @@ const getStats = async (req, res) => {
         const byType = await pool.query(byTypeQuery, params);
         const byStatus = await pool.query(byStatusQuery, params);
         const byAgent = await pool.query(byAgentQuery, params);
+
+        let byOriginQuery = 'SELECT lead_origen, COUNT(*) FROM solicitudes_contino';
+        if (!isAdmin) byOriginQuery += ' WHERE agente_asignado = $1';
+        byOriginQuery += ' GROUP BY lead_origen';
+        const byOrigin = await pool.query(byOriginQuery, params);
+
         const pendingResult = await pool.query(pendingQuery, params);
         const completedResult = await pool.query(completedQuery, params);
 
@@ -49,6 +55,7 @@ const getStats = async (req, res) => {
             byType: byType.rows,
             byStatus: byStatus.rows,
             byAgent: byAgent.rows,
+            byOrigin: byOrigin.rows,
             pending,
             responseRate
         });

@@ -125,6 +125,7 @@ async function fetchStats() {
             renderAgentChart(data.byAgent);
             renderStatusChart(data.byStatus);
             renderTypeChart(data.byType);
+            renderOriginChart(data.byOrigin);
         }
     } catch (err) {
         console.error('Error fetching stats:', err);
@@ -224,6 +225,64 @@ function renderTypeChart(data) {
             ${legend}
         </div>
     `;
+}
+
+function renderOriginChart(data) {
+    const container = document.getElementById('chart-origins');
+    if (!data || data.length === 0) {
+        container.innerHTML = '<p class="text-sm text-gray">No hay datos de origen.</p>';
+        return;
+    }
+
+    // Process Data: Group items with count > 1, others into "Otros"
+    const groupedData = [];
+    let othersCount = 0;
+
+    data.forEach(d => {
+        const count = parseInt(d.count);
+        const origin = d.lead_origen ? d.lead_origen.trim() : 'Sin origen';
+
+        // Skip empty strings if any found in DB as effectively "Sin origen" or just ignore
+        if (!origin) return;
+
+        if (count > 1) {
+            groupedData.push({ label: origin, count: count });
+        } else {
+            othersCount += count;
+        }
+    });
+
+    if (othersCount > 0) {
+        groupedData.push({ label: 'Otros (Unicos)', count: othersCount, isOthers: true });
+    }
+
+    // Sort by count desc
+    groupedData.sort((a, b) => b.count - a.count);
+
+    if (groupedData.length === 0) {
+        container.innerHTML = '<p class="text-sm text-gray">No hay datos suficientes.</p>';
+        return;
+    }
+
+    const max = Math.max(...groupedData.map(d => d.count));
+
+    container.innerHTML = groupedData.map((d, i) => {
+        const width = max > 0 ? (d.count / max) * 100 : 0;
+        // Generate a color for repeated items, gray for others
+        // We can use the same colors array or generate random ones
+        const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
+        const color = d.isOthers ? '#64748b' : colors[i % colors.length];
+
+        return `
+        <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;">
+            <div style="width: 150px; text-align:right; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.label}">${d.label}</div>
+            <div style="flex:1; background: #1e293b; border-radius:4px; height:24px; position:relative; overflow:hidden;">
+                <div style="width:${width}%; background:${color}; height:100%; border-radius:4px;"></div>
+            </div>
+            <div style="width: 30px; font-weight:bold; color:var(--text-primary);">${d.count}</div>
+        </div>
+        `;
+    }).join('');
 }
 
 async function fetchLeads() {
